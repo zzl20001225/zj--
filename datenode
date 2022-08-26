@@ -1,0 +1,33 @@
+// 选择第二台和第三胎服务器
+public int[] selectServer23(int server1) {
+    List<Double> scores = new ArrayList<>();
+    List<DataNode> dataNodes = dataNodeMapper.selectAllSpaces();
+    List<Double> usages = new ArrayList<>();
+    double allScore = 0.0;
+    for(int i = 0; i < dataNodes.size(); i++) {
+        DataNode dataNode = dataNodes.get(i);
+        int id = dataNode.getId();
+        int freeSpace = dataNode.getFreeSpace();
+        int allSpace = dataNode.getAllSpace();
+        double usage = (double) freeSpace / allSpace;
+        usages.set(id, usage);
+        allScore += usage;
+    }
+    for(int i = 0; i < dataNodes.size(); i++) {
+        DataNode dataNode = dataNodes.get(i);
+        int id = dataNode.getId();
+        double score = usages.get(i) / allScore;
+        scores.set(id, score);
+        System.out.println(id + ": " + scores.get(i));
+
+    }
+    Random random = new Random();
+    int res1, res2;
+    do {
+        res1 = random.nextInt(6) + 1;
+    } while(res1 == server1);
+    do {
+        res2 = random.nextInt(6) + 1;
+    } while(res2 == server1 || res2 == res1);
+    return new int[]{res1, res2};
+}
